@@ -39,6 +39,7 @@ export interface Car {
   transmission: Transmission;
   region: Region;
   imageUrl: string;
+  imageUrls?: string[]; // Multiple images support
   specs: {
     hp: number;
     acceleration: string;
@@ -50,8 +51,9 @@ export interface Car {
 
 export interface UserAccount {
   id: string;
-  name: string;
-  email: string;
+  firstName: string;
+  lastName: string;
+  age: number;
   status: 'Faol' | 'Bloklangan';
   joinedDate: string;
   activity: string;
@@ -72,7 +74,10 @@ export interface SettingsState {
 }
 
 export interface AppState {
+  cars: Car[];
+  users: UserAccount[];
   wishlist: string[];
   compareList: string[];
   settings: SettingsState;
+  hasEnteredInfo: boolean;
 }

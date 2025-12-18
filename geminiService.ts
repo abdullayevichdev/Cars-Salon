@@ -1,7 +1,8 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Fix: Initialize GoogleGenAI with the correct named parameter and direct process.env.API_KEY reference
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getCarRecommendation = async (userPreferences: string) => {
   try {
@@ -15,6 +16,7 @@ export const getCarRecommendation = async (userPreferences: string) => {
         temperature: 0.7,
       },
     });
+    // Fix: Access the .text property directly (not as a method) from GenerateContentResponse
     return response.text;
   } catch (error) {
     return "Abdulhay Motors sizga unumdorlik va barqarorlikning eng yaxshi kombinatsiyasi uchun bizning premium elektromobillar kolleksiyamizni o'rganishni tavsiya qiladi.";
@@ -31,6 +33,7 @@ export const getCarAIReview = async (carBrand: string, carModel: string) => {
           temperature: 0.8,
         }
       });
+      // Fix: Access the .text property directly (not as a method) from GenerateContentResponse
       return response.text;
     } catch (error) {
       return "Ushbu avtomobil o'z toifasida tengsiz muhandislik va nufuzni belgilovchi ajoyib tanlovdir.";

@@ -21,7 +21,7 @@ const IMAGE_POOLS = [
   'https://images.unsplash.com/photo-1606148651877-c93d4086e3f4',
   'https://images.unsplash.com/photo-1695660897369-e090534226d7',
   'https://images.unsplash.com/photo-1594502184342-2e12f877aa73',
-  'https://images.unsplash.com/photo-1555215695-3004980ad54e',
+  'https://images.unsplash.com/photo-1552519507-da3b142c6e3d',
   'https://images.unsplash.com/photo-1544636331-e26879cd4d9b',
   'https://images.unsplash.com/photo-1583121274602-3e2820c69888',
   'https://images.unsplash.com/photo-1502877338535-766e1452684a',
@@ -64,10 +64,12 @@ export const generateMockCars = (count: number): Car[] => {
   });
 };
 
+// Fix: Update MOCK_USERS mapping to match the UserAccount interface (firstName, lastName, age)
 export const MOCK_USERS: UserAccount[] = Array.from({ length: 50 }).map((_, i) => ({
   id: (i + 1).toString(),
-  name: `Foydalanuvchi ${i + 1}`,
-  email: `user${i + 1}@example.com`,
+  firstName: 'Foydalanuvchi',
+  lastName: `${i + 1}`,
+  age: 20 + (i % 40),
   status: i % 5 === 0 ? 'Bloklangan' : 'Faol',
   joinedDate: '2023-10-12',
   activity: i % 3 === 0 ? 'Avtomobil ko\'rdi' : 'Izoh qoldirdi',
