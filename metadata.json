@@ -1,0 +1,7 @@
+{
+  "name": "Abdulhay Motors - Global Car Marketplace",
+  "description": "A premium, world-class car marketplace featuring luxury, electric, and performance vehicles globally. Powered by Avazxanov_701 and Abdullayevich.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
