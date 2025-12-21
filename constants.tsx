@@ -15,16 +15,16 @@ const BRANDS_MODELS: Record<string, string[]> = {
 };
 
 const BRAND_IMAGES: Record<string, string[]> = {
-  'Tesla': ['1617788138017-80ad40651399', '1560958089-b8a1929cea89', '1619767886558-f79b12fe0ad4'],
-  'BMW': ['1555215695-46e392133a27', '1607082348824-0a96f2a4b9da', '1556800572-1b8aeef2c54f'],
-  'Mercedes-Benz': ['1567818733-35407963165b', '1618843479313-40f8afb4b4d8', '1603584173870-7f23bb593e54'],
-  'Porsche': ['1503736334956-4c8f8e929391', '1614162692292-7ac56d7f7f1e', '1520050206274-a1ae44613e6d'],
-  'Audi': ['1606148651877-c93d4086e3f4', '1614162692292-7ac56d7f7f1e', '1605515298816-dd3f113d9f0a'],
-  'Lamborghini': ['1544636331-e26879cd4d9b', '1583121274602-3e2820c69888', '1525609004358-2ee0bfb5121f'],
-  'Ferrari': ['1592198084033-aade902d1aae', '1494976388531-d1058494cdd8', '1580274455191-19622146557b'],
-  'BYD': ['1593941707882-a5bba14938c7', '1621932953913-a074c664a1ad', '1549399542-7ec8703f3fb8'],
-  'Chevrolet': ['1611651338412-8403df6a073a', '1552519507-da3b142c6e3d', '1626989422500-bbf53b8704d6'],
-  'Toyota': ['1541443131-1e18f294b92d', '1631214503028-ae7191d87f7a', '1533473359331-0135ef3c28da']
+  'Tesla': ['1617788138017-80ad40651399', '1560958089-b8a1929cea89', '1619767886558-f79b12fe0ad4', '1521127474489-d52943c20db0'],
+  'BMW': ['1555215695-46e392133a27', '1607082348824-0a96f2a4b9da', '1556800572-1b8aeef2c54f', '1523983388277-336a66bf9bcd'],
+  'Mercedes-Benz': ['1567818733-35407963165b', '1618843479313-40f8afb4b4d8', '1603584173870-7f23bb593e54', '1547679904-054097538053'],
+  'Porsche': ['1503736334956-4c8f8e929391', '1614162692292-7ac56d7f7f1e', '1520050206274-a1ae44613e6d', '1580273916550-13f37ba9d399'],
+  'Audi': ['1606148651877-c93d4086e3f4', '1605515298816-dd3f113d9f0a', '1618843479313-40f8afb4b4d8', '1533473359331-0135ef3c28da'],
+  'Lamborghini': ['1544636331-e26879cd4d9b', '1583121274602-3e2820c69888', '1525609004358-2ee0bfb5121f', '1621131160583-d8d2175f8121'],
+  'Ferrari': ['1592198084033-aade902d1aae', '1494976388531-d1058494cdd8', '1580274455191-19622146557b', '1594911771122-33104e35bc0a'],
+  'BYD': ['1593941707882-a5bba14938c7', '1621932953913-a074c664a1ad', '1549399542-7ec8703f3fb8', '1633513361005-4c07802877a3'],
+  'Chevrolet': ['1611651338412-8403df6a073a', '1552519507-da3b142c6e3d', '1626989422500-bbf53b8704d6', '1619405234977-f2732950920d'],
+  'Toyota': ['1541443131-1e18f294b92d', '1631214503028-ae7191d87f7a', '1533473359331-0135ef3c28da', '1621362854497-7f9f381014b2']
 };
 
 export const generateMockCars = (count: number): Car[] => {
@@ -36,11 +36,14 @@ export const generateMockCars = (count: number): Car[] => {
     const year = 2022 + Math.floor(Math.random() * 3);
     const basePrice = 45000 + (Math.floor(Math.random() * 500) * 1000);
     
+    // Rasm ID-lari
     const brandImagePool = BRAND_IMAGES[brand] || ['1503376780353-7e6692767b70'];
     const imageId = brandImagePool[i % brandImagePool.length];
     
-    const imageUrl = `https://images.unsplash.com/photo-${imageId}?auto=format&fit=crop&q=90&w=1400&sig=car_${i}_${brand}`;
+    // Unikal sig= va h=, w= orqali har xil rakurslar
+    const imageUrl = `https://images.unsplash.com/photo-${imageId}?auto=format&fit=crop&q=90&w=1400&sig=car_${i}_${brand}_main`;
 
+    // Har bir mashina uchun galereya
     const galleryImages = brandImagePool.map((id, idx) => 
       `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=85&w=1200&sig=gallery_${i}_${idx}`
     );

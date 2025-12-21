@@ -28,7 +28,11 @@ const CarDetailPage: React.FC = () => {
     // Live View: Adminni xabardor qilish
     const currentUser = state.users[0];
     if (currentUser) {
-      notifyLiveView(`${currentUser.firstName} ${currentUser.lastName}`, `${car.brand} ${car.model}`);
+      notifyLiveView(
+        `${currentUser.firstName} ${currentUser.lastName} (${currentUser.age} yosh)`, 
+        `${car.brand} ${car.model}`,
+        `$${car.price.toLocaleString()}`
+      );
     }
 
     const fetchReview = async () => {

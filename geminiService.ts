@@ -1,7 +1,6 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Fix: Initialize GoogleGenAI with the correct named parameter and direct process.env.API_KEY reference
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getCarRecommendation = async (userPreferences: string) => {
@@ -16,7 +15,6 @@ export const getCarRecommendation = async (userPreferences: string) => {
         temperature: 0.7,
       },
     });
-    // Fix: Access the .text property directly (not as a method) from GenerateContentResponse
     return response.text;
   } catch (error) {
     return "Abdulhay Motors sizga unumdorlik va barqarorlikning eng yaxshi kombinatsiyasi uchun bizning premium elektromobillar kolleksiyamizni o'rganishni tavsiya qiladi.";
@@ -33,9 +31,27 @@ export const getCarAIReview = async (carBrand: string, carModel: string) => {
           temperature: 0.8,
         }
       });
-      // Fix: Access the .text property directly (not as a method) from GenerateContentResponse
       return response.text;
     } catch (error) {
       return "Ushbu avtomobil o'z toifasida tengsiz muhandislik va nufuzni belgilovchi ajoyib tanlovdir.";
     }
-}
+};
+
+export const chatWithAI = async (history: {role: string, parts: {text: string}[]}[], message: string) => {
+  try {
+    const chat = ai.chats.create({
+      model: "gemini-3-flash-preview",
+      config: {
+        systemInstruction: "Siz Abdulhay Motorsning 'Abdulhay AI' ismli virtual yordamchisisiz. Siz juda xushmuomala, professional va avtomobillar bo'yicha ekspert emassiz. Sizning maqsadingiz mijozga mashina tanlashda yordam berish va uni Abdulhay Motorsdan sotib olishga qiziqtirishdir. Faqat O'zbek tilida javob bering.",
+        temperature: 0.9,
+      }
+    });
+    
+    // Convert history format if needed or just pass the last message for simplicity in this helper
+    const result = await chat.sendMessage({ message });
+    return result.text;
+  } catch (error) {
+    console.error("AI Chat error:", error);
+    return "Kechirasiz, tizimda vaqtinchalik uzilish yuz berdi. Iltimos, bir ozdan so'ng qayta urinib ko'ring.";
+  }
+};

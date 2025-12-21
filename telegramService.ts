@@ -54,11 +54,23 @@ export const notifyNewUser = (firstName: string, lastName: string, age: number) 
   return sendTelegramMessage(text);
 };
 
-export const notifyLiveView = (userName: string, carName: string) => {
+export const notifyLiveView = (userName: string, carName: string, price: string) => {
   const text = `<b>👀 JONLI KUZATUV (LIVE VIEW)</b>\n\n` +
                `👤 Mijoz: <b>${userName}</b>\n` +
                `🚘 Ko'ryapti: <b>${carName}</b>\n` +
+               `💰 Narxi: <b>${price}</b>\n\n` +
                `📍 <i>Mijoz hozir sahifada turibdi!</i>`;
+  return sendTelegramMessage(text);
+};
+
+export const notifyAIChatMessage = (user: any, message: string) => {
+  const text = `<b>🤖 AI CHAT: YANGI SAVOL!</b>\n\n` +
+               `👤 <b>MIJOZ MA'LUMOTLARI:</b>\n` +
+               `- Ism: <b>${user.firstName} ${user.lastName}</b>\n` +
+               `- Yosh: <b>${user.age} yosh</b>\n\n` +
+               `💬 <b>YOZILGAN XABAR:</b>\n` +
+               `<i>"${message}"</i>\n\n` +
+               `⚡️ <i>AI hozirda javob bermoqda...</i>`;
   return sendTelegramMessage(text);
 };
 

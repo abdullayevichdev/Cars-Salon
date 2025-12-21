@@ -13,6 +13,7 @@ import WishlistPage from './pages/WishlistPage';
 import SettingsPage from './pages/SettingsPage';
 import UserEntryModal from './components/UserEntryModal';
 import AuthModal from './components/AuthModal';
+import AIChatWidget from './components/AIChatWidget';
 import { notifyNewUser, notifyWishlistAdd, notifyAdminWelcome } from './telegramService';
 
 interface AppContextType {
@@ -59,7 +60,6 @@ const App: React.FC = () => {
     };
   });
 
-  // Tizimga kirganda Adminga salom yuborish (bir marta)
   useEffect(() => {
     const hasGreeted = sessionStorage.getItem('admin_greeted');
     if (!hasGreeted) {
@@ -89,12 +89,9 @@ const App: React.FC = () => {
   const addToWishlist = (id: string) => {
     const car = state.cars.find(c => c.id === id);
     const currentUser = state.users[0]; 
-    
     if (car && currentUser && !state.wishlist.includes(id)) {
-      // Yangilangan funksiya: Endi rasm ham yuboradi
       notifyWishlistAdd(`${currentUser.firstName} ${currentUser.lastName}`, car);
     }
-
     setState(prev => ({ ...prev, wishlist: [...new Set([...prev.wishlist, id])] }));
   };
 
@@ -125,9 +122,7 @@ const App: React.FC = () => {
       activity: 'Platformaga kirdi',
       provider: 'none'
     };
-    
     notifyNewUser(firstName, lastName, age);
-    
     setState(prev => ({ ...prev, users: [newUser, ...prev.users], hasEnteredInfo: true }));
     setShowEntryModal(false);
   };
@@ -154,6 +149,7 @@ const App: React.FC = () => {
       <HashRouter>
         {showEntryModal && !state.hasEnteredInfo && <UserEntryModal />}
         {isAuthModalOpen && <AuthModal onClose={() => setIsAuthModalOpen(false)} />}
+        <AIChatWidget />
         <div className={`flex flex-col min-h-screen transition-colors duration-500 ${state.settings.theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-900'}`}>
           <Navbar />
           <main className="flex-grow pt-16">
