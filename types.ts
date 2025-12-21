@@ -39,7 +39,7 @@ export interface Car {
   transmission: Transmission;
   region: Region;
   imageUrl: string;
-  imageUrls?: string[]; // Multiple images support
+  imageUrls?: string[];
   specs: {
     hp: number;
     acceleration: string;
@@ -47,6 +47,7 @@ export interface Car {
     range?: string;
   };
   description: string;
+  createdAt: string;
 }
 
 export interface UserAccount {
@@ -54,23 +55,26 @@ export interface UserAccount {
   firstName: string;
   lastName: string;
   age: number;
+  email?: string;
+  provider?: 'google' | 'apple' | 'none';
   status: 'Faol' | 'Bloklangan';
+  visitTimestamp: string;
   joinedDate: string;
   activity: string;
-}
-
-export interface FinanceRecord {
-  id: string;
-  date: string;
-  amount: number;
-  type: 'Daromad' | 'Xarajat';
-  description: string;
 }
 
 export interface SettingsState {
   theme: 'dark' | 'light';
   language: 'uz' | 'en';
   fontSize: 'sm' | 'base' | 'lg';
+}
+
+export interface AuthState {
+  isLoggedIn: boolean;
+  user: {
+    email: string;
+    provider: 'google' | 'apple';
+  } | null;
 }
 
 export interface AppState {
@@ -80,4 +84,5 @@ export interface AppState {
   compareList: string[];
   settings: SettingsState;
   hasEnteredInfo: boolean;
+  auth: AuthState;
 }
