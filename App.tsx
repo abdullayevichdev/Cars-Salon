@@ -1,7 +1,7 @@
 
-import React, { useState, createContext, useContext, useEffect } from 'react';
+import React, { useState, createContext, useContext, useEffect, useMemo } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppState, SettingsState, Car, UserAccount, AuthState } from './types';
+import { AppState, SettingsState, Car, UserAccount } from './types';
 import { MOCK_CARS, MOCK_USERS } from './constants';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -107,12 +107,24 @@ const App: React.FC = () => {
   };
 
   const updateSettings = (newSettings: Partial<SettingsState>) => setState(prev => ({ ...prev, settings: { ...prev.settings, ...newSettings } }));
-  const setCars = (action: React.SetStateAction<Car[]>) => setState(prev => ({ ...prev, cars: typeof action === 'function' ? action(prev.cars) : action }));
-  const setUsers = (action: React.SetStateAction<UserAccount[]>) => setState(prev => ({ ...prev, users: typeof action === 'function' ? action(prev.users) : action }));
+  
+  const setCars: React.Dispatch<React.SetStateAction<Car[]>> = (action) => {
+    setState(prev => ({
+      ...prev,
+      cars: typeof action === 'function' ? (action as (p: Car[]) => Car[])(prev.cars) : action
+    }));
+  };
+
+  const setUsers: React.Dispatch<React.SetStateAction<UserAccount[]>> = (action) => {
+    setState(prev => ({
+      ...prev,
+      users: typeof action === 'function' ? (action as (p: UserAccount[]) => UserAccount[])(prev.users) : action
+    }));
+  };
 
   const submitUserInfo = (firstName: string, lastName: string, age: number) => {
     const newUser: UserAccount = {
-      id: Date.now().toString(),
+      id: Math.floor(100000 + Math.random() * 900000).toString(),
       firstName,
       lastName,
       age,
@@ -122,7 +134,7 @@ const App: React.FC = () => {
       activity: 'Platformaga kirdi',
       provider: 'none'
     };
-    notifyNewUser(firstName, lastName, age);
+    notifyNewUser(newUser);
     setState(prev => ({ ...prev, users: [newUser, ...prev.users], hasEnteredInfo: true }));
     setShowEntryModal(false);
   };
@@ -144,8 +156,22 @@ const App: React.FC = () => {
     setState(prev => ({ ...prev, auth: { isLoggedIn: false, user: null } }));
   };
 
+  const contextValue = useMemo(() => ({
+    state,
+    addToWishlist,
+    removeFromWishlist,
+    toggleCompare,
+    updateSettings,
+    setCars,
+    setUsers,
+    submitUserInfo,
+    login,
+    logout,
+    showAuthModal
+  }), [state, isAuthModalOpen]);
+
   return (
-    <AppContext.Provider value={{ state, addToWishlist, removeFromWishlist, toggleCompare, updateSettings, setCars, setUsers, submitUserInfo, login, logout, showAuthModal }}>
+    <AppContext.Provider value={contextValue}>
       <HashRouter>
         {showEntryModal && !state.hasEnteredInfo && <UserEntryModal />}
         {isAuthModalOpen && <AuthModal onClose={() => setIsAuthModalOpen(false)} />}
