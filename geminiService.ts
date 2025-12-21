@@ -1,9 +1,12 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Ensure process.env is handled safely for client-side builds
+const API_KEY = process.env.API_KEY || "";
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const getCarRecommendation = async (userPreferences: string) => {
+  if (!API_KEY) return "Abdulhay Motors premium avtomobillarini tavsiya qiladi.";
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -22,6 +25,7 @@ export const getCarRecommendation = async (userPreferences: string) => {
 };
 
 export const getCarAIReview = async (carBrand: string, carModel: string) => {
+    if (!API_KEY) return "Ushbu avtomobil o'z toifasida eng yaxshi tanlovdir.";
     try {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -37,7 +41,8 @@ export const getCarAIReview = async (carBrand: string, carModel: string) => {
     }
 };
 
-export const chatWithAI = async (history: {role: string, parts: {text: string}[]}[], message: string) => {
+export const chatWithAI = async (history: any[], message: string) => {
+  if (!API_KEY) return "AI hozircha ishlamayapti, iltimos keyinroq urinib ko'ring.";
   try {
     const chat = ai.chats.create({
       model: "gemini-3-flash-preview",
@@ -47,7 +52,6 @@ export const chatWithAI = async (history: {role: string, parts: {text: string}[]
       }
     });
     
-    // Convert history format if needed or just pass the last message for simplicity in this helper
     const result = await chat.sendMessage({ message });
     return result.text;
   } catch (error) {

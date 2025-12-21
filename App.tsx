@@ -1,5 +1,4 @@
-
-import React, { useState, createContext, useContext, useEffect, useMemo } from 'react';
+import React, { useState, createContext, useContext, useEffect, useMemo, useCallback } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppState, SettingsState, Car, UserAccount } from './types';
 import { MOCK_CARS, MOCK_USERS } from './constants';
@@ -30,7 +29,8 @@ interface AppContextType {
   showAuthModal: () => void;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+// Kontekstni shu yerda yaratamiz va eksport qilamiz
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const useApp = () => {
   const context = useContext(AppContext);
@@ -86,43 +86,47 @@ const App: React.FC = () => {
     root.classList.add(state.settings.theme);
   }, [state.settings.theme]);
 
-  const addToWishlist = (id: string) => {
+  const addToWishlist = useCallback((id: string) => {
     const car = state.cars.find(c => c.id === id);
     const currentUser = state.users[0]; 
     if (car && currentUser && !state.wishlist.includes(id)) {
       notifyWishlistAdd(`${currentUser.firstName} ${currentUser.lastName}`, car);
     }
     setState(prev => ({ ...prev, wishlist: [...new Set([...prev.wishlist, id])] }));
-  };
+  }, [state.cars, state.users, state.wishlist]);
 
-  const removeFromWishlist = (id: string) => setState(prev => ({ ...prev, wishlist: prev.wishlist.filter(item => item !== id) }));
+  const removeFromWishlist = useCallback((id: string) => {
+    setState(prev => ({ ...prev, wishlist: prev.wishlist.filter(item => item !== id) }));
+  }, []);
   
-  const toggleCompare = (id: string) => {
+  const toggleCompare = useCallback((id: string) => {
     setState(prev => {
       const exists = prev.compareList.includes(id);
       if (exists) return { ...prev, compareList: prev.compareList.filter(item => item !== id) };
       if (prev.compareList.length >= 3) return prev;
       return { ...prev, compareList: [...prev.compareList, id] };
     });
-  };
+  }, []);
 
-  const updateSettings = (newSettings: Partial<SettingsState>) => setState(prev => ({ ...prev, settings: { ...prev.settings, ...newSettings } }));
+  const updateSettings = useCallback((newSettings: Partial<SettingsState>) => {
+    setState(prev => ({ ...prev, settings: { ...prev.settings, ...newSettings } }));
+  }, []);
   
-  const setCars: React.Dispatch<React.SetStateAction<Car[]>> = (action) => {
+  const setCars: React.Dispatch<React.SetStateAction<Car[]>> = useCallback((value) => {
     setState(prev => ({
       ...prev,
-      cars: typeof action === 'function' ? (action as (p: Car[]) => Car[])(prev.cars) : action
+      cars: typeof value === 'function' ? (value as (prev: Car[]) => Car[])(prev.cars) : value
     }));
-  };
+  }, []);
 
-  const setUsers: React.Dispatch<React.SetStateAction<UserAccount[]>> = (action) => {
+  const setUsers: React.Dispatch<React.SetStateAction<UserAccount[]>> = useCallback((value) => {
     setState(prev => ({
       ...prev,
-      users: typeof action === 'function' ? (action as (p: UserAccount[]) => UserAccount[])(prev.users) : action
+      users: typeof value === 'function' ? (value as (prev: UserAccount[]) => UserAccount[])(prev.users) : value
     }));
-  };
+  }, []);
 
-  const submitUserInfo = (firstName: string, lastName: string, age: number) => {
+  const submitUserInfo = useCallback((firstName: string, lastName: string, age: number) => {
     const newUser: UserAccount = {
       id: Math.floor(100000 + Math.random() * 900000).toString(),
       firstName,
@@ -137,11 +141,11 @@ const App: React.FC = () => {
     notifyNewUser(newUser);
     setState(prev => ({ ...prev, users: [newUser, ...prev.users], hasEnteredInfo: true }));
     setShowEntryModal(false);
-  };
+  }, []);
 
-  const showAuthModal = () => setIsAuthModalOpen(true);
+  const showAuthModal = useCallback(() => setIsAuthModalOpen(true), []);
 
-  const login = (provider: 'google' | 'apple') => {
+  const login = useCallback((provider: 'google' | 'apple') => {
     setState(prev => ({
       ...prev,
       auth: {
@@ -150,11 +154,11 @@ const App: React.FC = () => {
       }
     }));
     setIsAuthModalOpen(false);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setState(prev => ({ ...prev, auth: { isLoggedIn: false, user: null } }));
-  };
+  }, []);
 
   const contextValue = useMemo(() => ({
     state,
@@ -168,7 +172,7 @@ const App: React.FC = () => {
     login,
     logout,
     showAuthModal
-  }), [state, isAuthModalOpen]);
+  }), [state, addToWishlist, removeFromWishlist, toggleCompare, updateSettings, setCars, setUsers, submitUserInfo, login, logout, showAuthModal]);
 
   return (
     <AppContext.Provider value={contextValue}>
