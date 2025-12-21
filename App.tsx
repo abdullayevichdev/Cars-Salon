@@ -29,7 +29,7 @@ interface AppContextType {
   showAuthModal: () => void;
 }
 
-// Kontekstni shu yerda yaratamiz va eksport qilamiz
+// Kontekstni shu yerda yaratamiz
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const useApp = () => {
